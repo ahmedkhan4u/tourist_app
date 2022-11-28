@@ -56,13 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() async {
 
-    final auth = FirebaseAuth.instance;
+    // final auth = FirebaseAuth.instance;
 
-    await auth.createUserWithEmailAndPassword(email: "ahmed@gmail.com", password: "123456")
-    .then(((value) => print("User Created Successfully")))
-    .catchError((err) => print(err.toString()));
+    // await auth.createUserWithEmailAndPassword(email: "ahmed@gmail.com", password: "123456")
+    // .then(((value) => print("User Created Successfully")))
+    // .catchError((err) => print(err.toString()));
 
     setState(() {
+      
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
