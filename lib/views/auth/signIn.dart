@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, dead_code
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,29 @@ class _SignInState extends State<SignIn> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
   bool isUserLogin = false;
+
+  String role = '';
+  final db = FirebaseFirestore.instance;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+
+    db.collection('users').doc(uid).get().then((value) {
+      try {
+        role = value.get('Role');
+        print(role);
+      } catch (e) {
+        print(e);
+      }
+
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -107,9 +131,25 @@ class _SignInState extends State<SignIn> {
                                 });
                                 Get.snackbar(
                                     'SignIn', 'User Singed In Successfully');
-                                Get.to(
-                                  () => BottomNavigationScreen(),
-                                );
+
+                                role == 'Vendor'
+                                    ? Get.to(() => BottomNavigationScreen())
+                                    : Get.to(
+                                        () => BottomNavigationForTourist());
+                                // FirebaseFirestore.instance
+                                //     .collection('users')
+                                //     .where('Role', isEqualTo: 'Vendor')
+                                //     .get()
+                                //     .then((value) {
+                                //   Get.to(() => BottomNavigationScreen());
+                                // });
+                                // FirebaseFirestore.instance
+                                //     .collection('users')
+                                //     .where('Role', isEqualTo: 'Tourist')
+                                //     .get()
+                                //     .then((value) {
+                                //   Get.to(() => BottomNavigationForTourist());
+                                // });
                                 return value;
                               });
                             } on FirebaseAuthException catch (e) {

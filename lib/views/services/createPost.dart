@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:image_cropper/image_cropper.dart';
+import 'package:tourist_app/views/services/homepage.dart';
 
 import '../../utils/appColors.dart';
 import '../../widgets/customBtn.dart';
@@ -280,6 +281,10 @@ class _CreatePostState extends State<CreatePost> {
                                 'title': titleController.text,
                                 'user_id':
                                     FirebaseAuth.instance.currentUser!.uid,
+                                'post_id': FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .doc()
+                                    .id,
                                 'date':
                                     '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
                                 // 'isApproved': false,
@@ -295,6 +300,7 @@ class _CreatePostState extends State<CreatePost> {
                                 print(imageUrl);
                                 Get.snackbar(
                                     'Success', 'Post Created SuccessFully');
+                                Get.to(() => HomePage());
                                 return value;
                               });
                             } catch (e) {

@@ -1,10 +1,13 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tourist_app/utils/appColors.dart';
 
 import '../../widgets/customText.dart';
 import '../splash.dart';
@@ -59,14 +62,28 @@ class _MyPostsState extends State<MyPosts> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppColors.kBlackColor,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          backgroundColor: AppColors.kWhiteColor,
           actions: [
             IconButton(
-              icon: Icon(Icons.logout),
+              icon: Icon(
+                Icons.logout,
+                color: AppColors.kBlackColor,
+              ),
               onPressed: () {
                 logoutUser();
               },
             ),
           ],
+          elevation: 0,
         ),
         body: Container(
           height: Get.height,

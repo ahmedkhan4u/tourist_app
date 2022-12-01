@@ -30,6 +30,21 @@ class _CategoryClassState extends State<CategoryClass> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.kWhiteColor,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppColors.kBlackColor,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          title: customText('Categories', textColor: AppColors.kBlackColor),
+          centerTitle: true,
+          elevation: 0,
+        ),
         body: Container(
           child: buildGridView(),
         ),

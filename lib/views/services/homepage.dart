@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   bool _isFavorite = false;
 
   bool isReported = false;
-
+  String postId = '', userId = '', postImage = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -72,6 +73,24 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
+    FirebaseFirestore.instance.collection('posts').doc().get().then((value) {
+      try {
+        postId = value.get('post_id');
+      } catch (e) {
+        print(e);
+      }
+
+      try {
+        postImage = value.get('image');
+      } catch (e) {
+        print(e);
+      }
+      try {
+        userId = value.get('user_id');
+      } catch (e) {
+        print(e);
+      }
+    });
   }
 
   @override
@@ -175,66 +194,87 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 15.0,
                             ),
                             subtitle: customText(data['date']),
-                            trailing: IconButton(
-                              icon: Icon(
-                                Icons.more_vert,
-                                color: AppColors.kBlackColor,
-                              ),
-                              onPressed: () {
-                                Get.defaultDialog(
-                                  title: 'Report User',
-                                  content: Container(
-                                    height: Get.height * 0.25,
-                                    width: Get.width,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        customTextField(
-                                          text: 'Title',
-                                          controller: titleController,
-                                        ),
-                                        customTextField(
-                                            text: 'Message',
-                                            controller: msgController),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            try {
-                                              isReported
-                                                  ? CircularProgressIndicator()
-                                                  : db
-                                                      .collection('reports')
-                                                      .add({
-                                                      'title':
-                                                          titleController.text,
-                                                      'Message':
-                                                          msgController.text,
-                                                      'user_id': FirebaseAuth
-                                                          .instance
-                                                          .currentUser!
-                                                          .uid,
-                                                    }).then((value) {
-                                                      Get.snackbar('Report',
-                                                          'You report this user');
-                                                      Navigator.pop(context);
-                                                      return value;
-                                                    });
-                                            } catch (e) {
-                                              Get.snackbar(
-                                                'Error',
-                                                e.toString(),
-                                              );
-                                            }
-                                          },
-                                          child: customText('Report'),
-                                        )
-                                      ],
-                                    ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: AppColors.kBlackColor,
                                   ),
-                                );
-                              },
+                                  onPressed: () async {
+                                    await FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(documentSnapshots.id)
+                                        .delete()
+                                        .then((value) {
+                                      Get.snackbar(
+                                        'Delete msg',
+                                        'Post Deleted successfully',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                      );
+                                    });
+
+                                    // Get.defaultDialog(
+                                    //   title: 'Report User',
+                                    //   content: Container(
+                                    //     height: Get.height * 0.25,
+                                    //     width: Get.width,
+                                    //     child: Column(
+                                    //       mainAxisAlignment:
+                                    //           MainAxisAlignment.spaceBetween,
+                                    //       crossAxisAlignment:
+                                    //           CrossAxisAlignment.end,
+                                    //       children: [
+                                    //         customTextField(
+                                    //           text: 'Title',
+                                    //           controller: titleController,
+                                    //         ),
+                                    //         customTextField(
+                                    //             text: 'Message',
+                                    //             controller: msgController),
+                                    //         ElevatedButton(
+                                    //           onPressed: () {
+                                    //             try {
+                                    //               isReported
+                                    //                   ? CircularProgressIndicator()
+                                    //                   : db
+                                    //                       .collection('reports')
+                                    //                       .add({
+                                    //                       'title':
+                                    //                           titleController.text,
+                                    //                       'Message':
+                                    //                           msgController.text,
+                                    //                       'user_id': FirebaseAuth
+                                    //                           .instance
+                                    //                           .currentUser!
+                                    //                           .uid,
+                                    //                     }).then((value) {
+                                    //                       Get.snackbar('Report',
+                                    //                           'You report this user');
+                                    //                       Navigator.pop(context);
+                                    //                       return value;
+                                    //                     });
+                                    //             } catch (e) {
+                                    //               Get.snackbar(
+                                    //                 'Error',
+                                    //                 e.toString(),
+                                    //               );
+                                    //             }
+                                    //           },
+                                    //           child: customText('Report'),
+                                    //         )
+                                    //       ],
+                                    //     ),
+                                    //   ),
+                                    // );
+                                  },
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: customText('Book'),
+                                ),
+                              ],
                             ),
                           ),
                           Container(
@@ -307,20 +347,14 @@ class _HomePageState extends State<HomePage> {
                                   customText(data['likes'].length.toString()),
                                 ],
                               ),
-                              // IconButton(
-                              //   onPressed: () async {
-                              //     buildDynamicLink(
-                              //       data['title'],
-                              //       data['image'],
-                              //       documentSnapshots[index].id,
-                              //     );
-                              //   },
-                              //   icon: Icon(
-                              //     Icons.share,
-                              //     color: AppColors.kBlackColor,
-                              //     size: 20.0,
-                              //   ),
-                              // ),
+                              IconButton(
+                                onPressed: () async {},
+                                icon: Icon(
+                                  Icons.comment_outlined,
+                                  color: AppColors.kBlackColor,
+                                  size: 20.0,
+                                ),
+                              ),
                               IconButton(
                                 onPressed: () {
                                   if (favoritesBox!
