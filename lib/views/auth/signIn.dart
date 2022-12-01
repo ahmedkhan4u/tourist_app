@@ -36,20 +36,6 @@ class _SignInState extends State<SignIn> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    final User? user = auth.currentUser;
-    final uid = user!.uid;
-
-    db.collection('users').doc(uid).get().then((value) {
-      try {
-        role = value.get('Role');
-        print(role);
-      } catch (e) {
-        print(e);
-      }
-
-      setState(() {});
-    });
   }
 
   @override
@@ -124,34 +110,29 @@ class _SignInState extends State<SignIn> {
                                   .signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passController.text,
-                              )
-                                  .then((value) {
-                                setState(() {
-                                  isUserLogin = false;
-                                });
+                              );
+
+                              final res = await FirebaseFirestore.instance.collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid).get();
+                                
+                                if (res.exists && res.data()!.length > 0) {
+                                  if (res.data()!["Role"] == "Vendor"){
+                                    Get.to(() => BottomNavigationScreen(data: res.data()));
+                                    print("Vendor");
+                                    setState(() {
+                                      
+                                    });
+                                  } else {
+                                    Get.to(() => BottomNavigationForTourist(data: res.data(),));
+                                    print("Tourist");
+                                    setState(() {
+                                  
+                                    });
+                                  }
+                                }
                                 Get.snackbar(
                                     'SignIn', 'User Singed In Successfully');
 
-                                role == 'Vendor'
-                                    ? Get.to(() => BottomNavigationScreen())
-                                    : Get.to(
-                                        () => BottomNavigationForTourist());
-                                // FirebaseFirestore.instance
-                                //     .collection('users')
-                                //     .where('Role', isEqualTo: 'Vendor')
-                                //     .get()
-                                //     .then((value) {
-                                //   Get.to(() => BottomNavigationScreen());
-                                // });
-                                // FirebaseFirestore.instance
-                                //     .collection('users')
-                                //     .where('Role', isEqualTo: 'Tourist')
-                                //     .get()
-                                //     .then((value) {
-                                //   Get.to(() => BottomNavigationForTourist());
-                                // });
-                                return value;
-                              });
                             } on FirebaseAuthException catch (e) {
                               Get.snackbar(
                                 'Error',
@@ -184,7 +165,7 @@ class _SignInState extends State<SignIn> {
                         text: 'Don\'t have an account?',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                         children: <TextSpan>[
                           TextSpan(

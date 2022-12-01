@@ -273,22 +273,24 @@ class _CreatePostState extends State<CreatePost> {
                                       .ref
                                       .getDownloadURL();
                               print(imageUrl);
+                              final docId = await FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .doc()
+                                    .id;
 
                               Get.snackbar('storage sms',
                                   'Upload image successfully to firebase storage');
-                              db.collection('posts').add({
+                              db.collection('posts').doc(docId).set({
                                 'image': imageUrl,
                                 'title': titleController.text,
                                 'user_id':
                                     FirebaseAuth.instance.currentUser!.uid,
-                                'post_id': FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc()
-                                    .id,
+                                'post_id': docId,
                                 'date':
                                     '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
                                 // 'isApproved': false,
                                 'user_name': name,
+                                'bookings': [],
                                 'user_image_url': image,
                                 'country': country,
                                 'Category': dropDownValue,

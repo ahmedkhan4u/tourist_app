@@ -40,7 +40,7 @@ class RoleScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: const Text(
-                      'Sign Up as Vender',
+                      'Sign Up as Venddr',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
