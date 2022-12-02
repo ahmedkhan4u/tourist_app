@@ -19,7 +19,8 @@ import '../../widgets/customTextField.dart';
 import 'block.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final data;
+ HomePage({Key? key, this.data}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -197,7 +198,8 @@ class _HomePageState extends State<HomePage> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                IconButton(
+                                
+                                widget.data["Role"] != null &&  widget.data["Role"] == "Vendor" ? IconButton(
                                   icon: Icon(
                                     Icons.delete,
                                     color: AppColors.kBlackColor,
@@ -269,10 +271,33 @@ class _HomePageState extends State<HomePage> {
                                     //   ),
                                     // );
                                   },
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: customText('Book'),
+                                ) : Container(),
+
+                                widget.data["Role"] != null && widget.data["Role"] == "Vendor" ? Container() : TextButton(
+                                  onPressed: () async {
+                                    if (data["bookings"].contains(data["user_id"])) {
+                                      Get.snackbar("Info", "Already booked");
+                                      return;
+                                    }
+                                    await FirebaseFirestore.instance.collection("posts").doc(data['post_id'])
+                                    .update({"bookings": FieldValue.arrayUnion([data["user_id"]])});
+
+                                    final bookingId = await FirebaseFirestore.instance.collection("bookings").doc().id;
+
+                                    await FirebaseFirestore.instance.collection("bookings").doc(bookingId).set({
+                                      "booker_name": widget.data["name"],
+                                      "booker_id": FirebaseAuth.instance.currentUser!.uid,
+                                      "post_id": data["post_id"],
+                                      "post_title": data["title"],
+                                      "category": data["Category"],
+                                      "post_image": data["image"],
+                                      "post_user_id": data["user_id"],
+                                      "post_user_image": data["user_image_url"],
+                                      "booking_id": bookingId
+                                    });
+                              
+                                  },
+                                  child: customText(data["bookings"].contains(data["user_id"]) ? "Booked" : "Book"),
                                 ),
                               ],
                             ),

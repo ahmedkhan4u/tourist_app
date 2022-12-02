@@ -12,10 +12,12 @@ import 'services/favorite.dart';
 import 'services/homepage.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
-  const BottomNavigationScreen({Key? key}) : super(key: key);
+  final data;
+  BottomNavigationScreen({Key? key, this.data}) : super(key: key);
 
   @override
   _BottomNavigationScreenState createState() => _BottomNavigationScreenState();
+
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
@@ -27,10 +29,14 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     MyPosts(),
   ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomePage(); // O
+  @override
+
+ // O
 
   @override
   Widget build(BuildContext context) {
+    Widget currentScreen = HomePage(data: widget.data,);
+    print("User Data : ${widget.data}");
     return SafeArea(
       child: Scaffold(
         body: PageStorage(
@@ -62,7 +68,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                       onPressed: () {
                         setState(() {
                           currentScreen =
-                              HomePage(); // if user taps on this dashboard tab will be active
+                              HomePage(data: widget.data,); // if user taps on this dashboard tab will be active
                           currentTab = 0;
                         });
                       },
@@ -181,7 +187,10 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 }
 
 class BottomNavigationForTourist extends StatefulWidget {
-  const BottomNavigationForTourist({super.key});
+
+  final data;
+
+  BottomNavigationForTourist({super.key, this.data});
 
   @override
   State<BottomNavigationForTourist> createState() =>
@@ -198,9 +207,12 @@ class _BottomNavigationForTouristState
     MyPosts(),
   ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomePage(); //
+  
   @override
   Widget build(BuildContext context) {
+    Widget currentScreen = HomePage(data: widget.data,); //
+  
+print(widget.data.toString());
     return SafeArea(
       child: Scaffold(
         body: PageStorage(

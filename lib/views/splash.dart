@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tourist_app/views/auth/signIn.dart';
 import 'package:tourist_app/views/roles.dart';
 
 import '../utils/appColors.dart';
@@ -54,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void startTimer() {
     Timer(Duration(seconds: 3), () {
       Get.to(
-        () => RoleScreen(),
+        () => SignIn(),
       );
       // navigateUser(); //It will redirect  after 3 seconds
     });
