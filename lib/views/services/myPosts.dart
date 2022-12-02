@@ -13,7 +13,8 @@ import '../../widgets/customText.dart';
 import '../splash.dart';
 
 class MyPosts extends StatefulWidget {
-  const MyPosts({Key? key}) : super(key: key);
+  final data;
+  MyPosts({Key? key, this.data}) : super(key: key);
 
   @override
   _MyPostsState createState() => _MyPostsState();
