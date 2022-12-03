@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist_app/utils/appColors.dart';
+import 'package:tourist_app/views/auth/signIn.dart';
 
 import '../../widgets/customText.dart';
 import '../splash.dart';
@@ -53,9 +54,11 @@ class _MyPostsState extends State<MyPosts> {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   void logoutUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    Get.to(() => SplashScreen());
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.clear();
+    // Get.to(() => SignIn());
+    FirebaseAuth.instance.signOut();
+    Get.to(() => SignIn());
   }
 
   @override
