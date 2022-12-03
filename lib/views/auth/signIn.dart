@@ -106,33 +106,32 @@ class _SignInState extends State<SignIn> {
                               isUserLogin = true;
                             });
                             try {
-                              await auth
-                                  .signInWithEmailAndPassword(
+                              await auth.signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passController.text,
                               );
 
-                              final res = await FirebaseFirestore.instance.collection("users")
-                                  .doc(FirebaseAuth.instance.currentUser!.uid).get();
-                                
-                                if (res.exists && res.data()!.length > 0) {
-                                  if (res.data()!["Role"] == "Vendor"){
-                                    Get.to(() => BottomNavigationScreen(data: res.data()));
-                                    print("Vendor");
-                                    setState(() {
-                                      
-                                    });
-                                  } else {
-                                    Get.to(() => BottomNavigationForTourist(data: res.data(),));
-                                    print("Tourist");
-                                    setState(() {
-                                  
-                                    });
-                                  }
-                                }
-                                Get.snackbar(
-                                    'SignIn', 'User Singed In Successfully');
+                              final res = await FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .get();
 
+                              if (res.exists && res.data()!.length > 0) {
+                                if (res.data()!["Role"] == "Vendor") {
+                                  Get.to(() =>
+                                      BottomNavigationScreen(data: res.data()));
+                                  print("Vendor");
+                                  setState(() {});
+                                } else {
+                                  Get.to(() => BottomNavigationForTourist(
+                                        data: res.data(),
+                                      ));
+                                  print("Tourist");
+                                  setState(() {});
+                                }
+                              }
+                              Get.snackbar(
+                                  'SignIn', 'User Singed In Successfully');
                             } on FirebaseAuthException catch (e) {
                               Get.snackbar(
                                 'Error',

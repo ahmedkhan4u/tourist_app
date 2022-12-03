@@ -20,7 +20,7 @@ import 'block.dart';
 
 class HomePage extends StatefulWidget {
   final data;
- HomePage({Key? key, this.data}) : super(key: key);
+  HomePage({Key? key, this.data}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -198,107 +198,137 @@ class _HomePageState extends State<HomePage> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                
-                                widget.data["Role"] != null &&  widget.data["Role"] == "Vendor" ? IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: AppColors.kBlackColor,
-                                  ),
-                                  onPressed: () async {
-                                    await FirebaseFirestore.instance
-                                        .collection('posts')
-                                        .doc(documentSnapshots.id)
-                                        .delete()
-                                        .then((value) {
-                                      Get.snackbar(
-                                        'Delete msg',
-                                        'Post Deleted successfully',
-                                        snackPosition: SnackPosition.BOTTOM,
-                                      );
-                                    });
+                                widget.data["Role"] != null &&
+                                        widget.data["Role"] == "Vendor"
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: AppColors.kBlackColor,
+                                        ),
+                                        onPressed: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection('posts')
+                                              .doc(documentSnapshots.id)
+                                              .delete()
+                                              .then((value) {
+                                            Get.snackbar(
+                                              'Delete msg',
+                                              'Post Deleted successfully',
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                            );
+                                          });
 
-                                    // Get.defaultDialog(
-                                    //   title: 'Report User',
-                                    //   content: Container(
-                                    //     height: Get.height * 0.25,
-                                    //     width: Get.width,
-                                    //     child: Column(
-                                    //       mainAxisAlignment:
-                                    //           MainAxisAlignment.spaceBetween,
-                                    //       crossAxisAlignment:
-                                    //           CrossAxisAlignment.end,
-                                    //       children: [
-                                    //         customTextField(
-                                    //           text: 'Title',
-                                    //           controller: titleController,
-                                    //         ),
-                                    //         customTextField(
-                                    //             text: 'Message',
-                                    //             controller: msgController),
-                                    //         ElevatedButton(
-                                    //           onPressed: () {
-                                    //             try {
-                                    //               isReported
-                                    //                   ? CircularProgressIndicator()
-                                    //                   : db
-                                    //                       .collection('reports')
-                                    //                       .add({
-                                    //                       'title':
-                                    //                           titleController.text,
-                                    //                       'Message':
-                                    //                           msgController.text,
-                                    //                       'user_id': FirebaseAuth
-                                    //                           .instance
-                                    //                           .currentUser!
-                                    //                           .uid,
-                                    //                     }).then((value) {
-                                    //                       Get.snackbar('Report',
-                                    //                           'You report this user');
-                                    //                       Navigator.pop(context);
-                                    //                       return value;
-                                    //                     });
-                                    //             } catch (e) {
-                                    //               Get.snackbar(
-                                    //                 'Error',
-                                    //                 e.toString(),
-                                    //               );
-                                    //             }
-                                    //           },
-                                    //           child: customText('Report'),
-                                    //         )
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // );
-                                  },
-                                ) : Container(),
+                                          // Get.defaultDialog(
+                                          //   title: 'Report User',
+                                          //   content: Container(
+                                          //     height: Get.height * 0.25,
+                                          //     width: Get.width,
+                                          //     child: Column(
+                                          //       mainAxisAlignment:
+                                          //           MainAxisAlignment.spaceBetween,
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment.end,
+                                          //       children: [
+                                          //         customTextField(
+                                          //           text: 'Title',
+                                          //           controller: titleController,
+                                          //         ),
+                                          //         customTextField(
+                                          //             text: 'Message',
+                                          //             controller: msgController),
+                                          //         ElevatedButton(
+                                          //           onPressed: () {
+                                          //             try {
+                                          //               isReported
+                                          //                   ? CircularProgressIndicator()
+                                          //                   : db
+                                          //                       .collection('reports')
+                                          //                       .add({
+                                          //                       'title':
+                                          //                           titleController.text,
+                                          //                       'Message':
+                                          //                           msgController.text,
+                                          //                       'user_id': FirebaseAuth
+                                          //                           .instance
+                                          //                           .currentUser!
+                                          //                           .uid,
+                                          //                     }).then((value) {
+                                          //                       Get.snackbar('Report',
+                                          //                           'You report this user');
+                                          //                       Navigator.pop(context);
+                                          //                       return value;
+                                          //                     });
+                                          //             } catch (e) {
+                                          //               Get.snackbar(
+                                          //                 'Error',
+                                          //                 e.toString(),
+                                          //               );
+                                          //             }
+                                          //           },
+                                          //           child: customText('Report'),
+                                          //         )
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                          // );
+                                        },
+                                      )
+                                    : Container(),
+                                widget.data["Role"] != null &&
+                                        widget.data["Role"] == "Vendor"
+                                    ? Container()
+                                    : TextButton(
+                                        onPressed: () async {
+                                          if (data["bookings"].contains(
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid)) {
+                                            Get.snackbar(
+                                                "Info", "Already booked");
+                                            return;
+                                          }
+                                          await FirebaseFirestore.instance
+                                              .collection("posts")
+                                              .doc(data['post_id'])
+                                              .update({
+                                            "bookings": FieldValue.arrayUnion([
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid
+                                            ])
+                                          });
 
-                                widget.data["Role"] != null && widget.data["Role"] == "Vendor" ? Container() : TextButton(
-                                  onPressed: () async {
-                                    if (data["bookings"].contains(data["user_id"])) {
-                                      Get.snackbar("Info", "Already booked");
-                                      return;
-                                    }
-                                    await FirebaseFirestore.instance.collection("posts").doc(data['post_id'])
-                                    .update({"bookings": FieldValue.arrayUnion([data["user_id"]])});
+                                          final bookingId =
+                                              await FirebaseFirestore.instance
+                                                  .collection("bookings")
+                                                  .doc()
+                                                  .id;
 
-                                    final bookingId = await FirebaseFirestore.instance.collection("bookings").doc().id;
-
-                                    await FirebaseFirestore.instance.collection("bookings").doc(bookingId).set({
-                                      "booker_name": widget.data["name"],
-                                      "booker_id": FirebaseAuth.instance.currentUser!.uid,
-                                      "post_id": data["post_id"],
-                                      "post_title": data["title"],
-                                      "category": data["Category"],
-                                      "post_image": data["image"],
-                                      "post_user_id": data["user_id"],
-                                      "post_user_image": data["user_image_url"],
-                                      "booking_id": bookingId
-                                    });
-                              
-                                  },
-                                  child: customText(data["bookings"].contains(data["user_id"]) ? "Booked" : "Book"),
-                                ),
+                                          await FirebaseFirestore.instance
+                                              .collection("bookings")
+                                              .doc(bookingId)
+                                              .set({
+                                            "booker_name": widget.data["name"],
+                                            "booker_id": FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            "post_id": data["post_id"],
+                                            "post_title": data["title"],
+                                            "category": data["Category"],
+                                            "post_image": data["image"],
+                                            "post_user_id": data["user_id"],
+                                            "post_user_image":
+                                                data["user_image_url"],
+                                            'post_user_name': data['user_name'],
+                                            'date': data['date'],
+                                            'likes':
+                                                data['likes'].length.toString(),
+                                            "booking_id": bookingId
+                                          });
+                                        },
+                                        child: (data["bookings"].contains(
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid))
+                                            ? customText('Booked')
+                                            : customText('Book')),
                               ],
                             ),
                           ),

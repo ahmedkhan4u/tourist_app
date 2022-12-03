@@ -17,7 +17,6 @@ class BottomNavigationScreen extends StatefulWidget {
 
   @override
   _BottomNavigationScreenState createState() => _BottomNavigationScreenState();
-
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
@@ -31,28 +30,33 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   final PageStorageBucket bucket = PageStorageBucket();
   @override
 
- // O
-    
-
-
+  // O
 
   @override
   Widget build(BuildContext context) {
-
     Widget getWidget() {
-
-      switch(currentTab) {
+      switch (currentTab) {
         case 0:
-        return HomePage(data: widget.data,);
+          return HomePage(
+            data: widget.data,
+          );
         case 1:
-        return CategoryClass(data: widget.data,);
+          return CategoryClass(
+            data: widget.data,
+          );
         case 2:
-        return Favorites(data: widget.data,);
+          return Favorites(
+            data: widget.data,
+          );
         case 3:
-        return MyPosts(data: widget.data,);
+          return MyPosts(
+            data: widget.data,
+          );
 
-        default: 
-        return HomePage(data: widget.data,);
+        default:
+          return HomePage(
+            data: widget.data,
+          );
       }
     }
 
@@ -87,12 +91,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                     MaterialButton(
                       minWidth: 40,
                       onPressed: () {
-                        currentScreen =
-                              HomePage(data: widget.data,); // if user taps on this dashboard tab will be active
-                          currentTab = 0;
-                        setState(() {
-                          
-                        });
+                        currentScreen = HomePage(
+                          data: widget.data,
+                        ); // if user taps on this dashboard tab will be active
+                        currentTab = 0;
+                        setState(() {});
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -114,12 +117,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                     MaterialButton(
                       minWidth: 40,
                       onPressed: () {
-                         currentScreen =
-                              CategoryClass(data: widget.data,); // if user taps on this dashboard tab will be active
-                          currentTab = 1;
-                        setState(() {
-                         
-                        });
+                        currentScreen = CategoryClass(
+                          data: widget.data,
+                        ); // if user taps on this dashboard tab will be active
+                        currentTab = 1;
+                        setState(() {});
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -210,10 +212,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 }
 
 class BottomNavigationForTourist extends StatefulWidget {
-
   final data;
-
-  BottomNavigationForTourist({super.key, this.data});
+  const BottomNavigationForTourist({super.key, this.data});
 
   @override
   State<BottomNavigationForTourist> createState() =>
@@ -230,12 +230,36 @@ class _BottomNavigationForTouristState
     MyPosts(),
   ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
-  
+  @override
+
+  // O
   @override
   Widget build(BuildContext context) {
-    Widget currentScreen = HomePage(data: widget.data,); //
-  
-print(widget.data.toString());
+    Widget getWidget() {
+      switch (currentTab) {
+        case 0:
+          return HomePage(
+            data: widget.data,
+          );
+        case 1:
+          return BookingScreen();
+        case 2:
+          return Favorites(
+            data: widget.data,
+          );
+        case 3:
+          return MyPosts(
+            data: widget.data,
+          );
+
+        default:
+          return HomePage(
+            data: widget.data,
+          );
+      }
+    }
+
+    Widget currentScreen = getWidget();
     return SafeArea(
       child: Scaffold(
         body: PageStorage(
@@ -250,109 +274,121 @@ print(widget.data.toString());
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                MaterialButton(
-                  minWidth: 40,
-                  onPressed: () {
-                    setState(() {
-                      currentScreen =
-                          HomePage(); // if user taps on this dashboard tab will be active
-                      currentTab = 0;
-                    });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.home,
-                        color: currentTab == 0 ? Colors.blue : Colors.grey,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        currentScreen = HomePage(
+                          data: widget.data,
+                        ); // if user taps on this dashboard tab will be active
+                        currentTab = 0;
+                        setState(() {});
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.home,
+                            color: currentTab == 0 ? Colors.blue : Colors.grey,
+                          ),
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              color:
+                                  currentTab == 0 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Home',
-                        style: TextStyle(
-                          color: currentTab == 0 ? Colors.blue : Colors.grey,
-                        ),
+                    ),
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        currentScreen =
+                            BookingScreen(); // if user taps on this dashboard tab will be active
+                        currentTab = 1;
+                        setState(() {});
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.category_outlined,
+                            color: currentTab == 1 ? Colors.blue : Colors.grey,
+                          ),
+                          Text(
+                            'Bookings',
+                            style: TextStyle(
+                              color:
+                                  currentTab == 1 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                MaterialButton(
-                  minWidth: 40,
-                  onPressed: () {
-                    setState(() {
-                      currentScreen =
-                          CategoryClass(data: widget.data,); // if user taps on this dashboard tab will be active
-                      currentTab = 1;
-                    });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.bookmark_outline_sharp,
-                        color: currentTab == 1 ? Colors.blue : Colors.grey,
-                      ),
-                      Text(
-                        'Bookings',
-                        style: TextStyle(
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
 
                 // Right Tab bar icons
 
-                MaterialButton(
-                  minWidth: 40,
-                  onPressed: () {
-                    setState(() {
-                      currentScreen =
-                          Favorites(data: widget.data,); // if user taps on this dashboard tab will be active
-                      currentTab = 2;
-                    });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.favorite_border,
-                        color: currentTab == 2 ? Colors.blue : Colors.grey,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen =
+                              Favorites(); // if user taps on this dashboard tab will be active
+                          currentTab = 2;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.favorite_border,
+                            color: currentTab == 2 ? Colors.blue : Colors.grey,
+                          ),
+                          Text(
+                            'Favorites',
+                            style: TextStyle(
+                              color:
+                                  currentTab == 2 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Favorites',
-                        style: TextStyle(
-                          color: currentTab == 2 ? Colors.blue : Colors.grey,
-                        ),
+                    ),
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen =
+                              MyPosts(); // if user taps on this dashboard tab will be active
+                          currentTab = 3;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.person,
+                            color: currentTab == 3 ? Colors.blue : Colors.grey,
+                          ),
+                          Text(
+                            'Profile',
+                            style: TextStyle(
+                              color:
+                                  currentTab == 3 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                MaterialButton(
-                  minWidth: 40,
-                  onPressed: () {
-                    setState(() {
-                      currentTab = 3;
-                      currentScreen =
-                          MyPosts(data: widget.data,); // if user taps on this dashboard tab will be active
-                      
-                    });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: currentTab == 3 ? Colors.blue : Colors.grey,
-                      ),
-                      Text(
-                        'Profile',
-                        style: TextStyle(
-                          color: currentTab == 3 ? Colors.blue : Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+                    )
+                  ],
                 )
               ],
             ),
