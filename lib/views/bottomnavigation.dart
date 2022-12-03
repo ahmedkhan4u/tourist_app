@@ -235,6 +235,7 @@ class _BottomNavigationForTouristState
   // O
   @override
   Widget build(BuildContext context) {
+  
     Widget getWidget() {
       switch (currentTab) {
         case 0:
