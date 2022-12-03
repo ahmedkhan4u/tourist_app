@@ -13,7 +13,9 @@ import '../../utils/appColors.dart';
 import '../../widgets/customText.dart';
 
 class CategoryClass extends StatefulWidget {
-  const CategoryClass({Key? key}) : super(key: key);
+  
+  final data;
+  CategoryClass({Key? key, this.data}) : super(key: key);
 
   @override
   _CategoryClassState createState() => _CategoryClassState();

@@ -32,11 +32,32 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   @override
 
  // O
+    
+
+
 
   @override
   Widget build(BuildContext context) {
-    Widget currentScreen = HomePage(data: widget.data,);
-    print("User Data : ${widget.data}");
+
+    Widget getWidget() {
+
+      switch(currentTab) {
+        case 0:
+        return HomePage(data: widget.data,);
+        case 1:
+        return CategoryClass(data: widget.data,);
+        case 2:
+        return Favorites(data: widget.data,);
+        case 3:
+        return MyPosts(data: widget.data,);
+
+        default: 
+        return HomePage(data: widget.data,);
+      }
+    }
+
+    Widget currentScreen = getWidget();
+
     return SafeArea(
       child: Scaffold(
         body: PageStorage(
@@ -66,10 +87,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                     MaterialButton(
                       minWidth: 40,
                       onPressed: () {
-                        setState(() {
-                          currentScreen =
+                        currentScreen =
                               HomePage(data: widget.data,); // if user taps on this dashboard tab will be active
                           currentTab = 0;
+                        setState(() {
+                          
                         });
                       },
                       child: Column(
@@ -92,10 +114,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                     MaterialButton(
                       minWidth: 40,
                       onPressed: () {
-                        setState(() {
-                          currentScreen =
-                              CategoryClass(); // if user taps on this dashboard tab will be active
+                         currentScreen =
+                              CategoryClass(data: widget.data,); // if user taps on this dashboard tab will be active
                           currentTab = 1;
+                        setState(() {
+                         
                         });
                       },
                       child: Column(
@@ -257,7 +280,7 @@ print(widget.data.toString());
                   onPressed: () {
                     setState(() {
                       currentScreen =
-                          CategoryClass(); // if user taps on this dashboard tab will be active
+                          CategoryClass(data: widget.data,); // if user taps on this dashboard tab will be active
                       currentTab = 1;
                     });
                   },
@@ -285,7 +308,7 @@ print(widget.data.toString());
                   onPressed: () {
                     setState(() {
                       currentScreen =
-                          Favorites(); // if user taps on this dashboard tab will be active
+                          Favorites(data: widget.data,); // if user taps on this dashboard tab will be active
                       currentTab = 2;
                     });
                   },
@@ -309,9 +332,10 @@ print(widget.data.toString());
                   minWidth: 40,
                   onPressed: () {
                     setState(() {
-                      currentScreen =
-                          MyPosts(); // if user taps on this dashboard tab will be active
                       currentTab = 3;
+                      currentScreen =
+                          MyPosts(data: widget.data,); // if user taps on this dashboard tab will be active
+                      
                     });
                   },
                   child: Column(

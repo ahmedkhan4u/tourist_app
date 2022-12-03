@@ -10,7 +10,8 @@ import '../../models/favoritesModel.dart';
 import '../../utils/appColors.dart';
 
 class Favorites extends StatefulWidget {
-  const Favorites({Key? key}) : super(key: key);
+  final data;
+  Favorites({Key? key, this.data}) : super(key: key);
 
   @override
   _FavoritesState createState() => _FavoritesState();
