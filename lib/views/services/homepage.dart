@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:share/share.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
+import 'package:tourist_app/views/services/bookingUsers.dart';
 import 'package:tourist_app/views/services/postDetails.dart';
 import 'package:tourist_app/views/services/remove.dart';
 import '../../main.dart';
@@ -308,6 +309,8 @@ class _HomePageState extends State<HomePage> {
                                               .doc(bookingId)
                                               .set({
                                             "booker_name": widget.data["name"],
+                                            'booker_image':
+                                                widget.data['image'],
                                             "booker_id": FirebaseAuth
                                                 .instance.currentUser!.uid,
                                             "post_id": data["post_id"],
@@ -319,6 +322,8 @@ class _HomePageState extends State<HomePage> {
                                                 data["user_image_url"],
                                             'post_user_name': data['user_name'],
                                             'date': data['date'],
+                                            'Booking_date':
+                                                '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
                                             'likes':
                                                 data['likes'].length.toString(),
                                             "booking_id": bookingId
@@ -410,39 +415,95 @@ class _HomePageState extends State<HomePage> {
                                   size: 20.0,
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  if (favoritesBox!
-                                      .containsKey(favorites.uid)) {
-                                    favoritesBox!.delete(favorites.uid);
-                                    Get.snackbar(
-                                      'Success',
-                                      'Post removed from Favorites SuccessFully',
-                                      backgroundColor: AppColors.borderColor,
-                                    );
-                                  } else {
-                                    favoritesBox!.put(favorites.uid, favorites);
-                                    Get.snackbar(
-                                      'Success',
-                                      'Post added to Favorites SuccessFully',
-                                      backgroundColor: AppColors.borderColor,
-                                    );
-                                  }
-                                  // favoritesBox!.containsKey(favorites.uid)
-                                  //     ? favoritesBox!.delete(favorites.uid)
-                                  //     : favoritesBox!
-                                  //         .put(favorites.uid, favorites);
-                                  setState(() {});
-                                },
-                                icon: favoritesBox!.containsKey(favorites.uid)
-                                    ? Icon(
-                                        Icons.favorite,
-                                        color: AppColors.kRedColor,
-                                      )
-                                    : Icon(
-                                        Icons.favorite_border,
-                                      ),
-                              ),
+                              widget.data["Role"] != null &&
+                                      widget.data["Role"] == "Vendor"
+                                  ? TextButton(
+                                      onPressed: () async {
+                                        Get.to(() => BookingUserScreen());
+                                        // if (data["bookings"].contains(
+                                        //     FirebaseAuth
+                                        //         .instance.currentUser!.uid)) {
+                                        //   Get.snackbar(
+                                        //       "Info", "Already booked");
+                                        //   return;
+                                        // }
+                                        // await FirebaseFirestore.instance
+                                        //     .collection("posts")
+                                        //     .doc(data['post_id'])
+                                        //     .update({
+                                        //   "bookings": FieldValue.arrayUnion([
+                                        //     FirebaseAuth
+                                        //         .instance.currentUser!.uid
+                                        //   ])
+                                        // });
+
+                                        // final bookingId =
+                                        //     await FirebaseFirestore.instance
+                                        //         .collection("bookings")
+                                        //         .doc()
+                                        //         .id;
+
+                                        // await FirebaseFirestore.instance
+                                        //     .collection("bookings")
+                                        //     .doc(bookingId)
+                                        //     .set({
+                                        //   "booker_name": widget.data["name"],
+                                        //   'booker_image':
+                                        //       widget.data['image'],
+                                        //   "booker_id": FirebaseAuth
+                                        //       .instance.currentUser!.uid,
+                                        //   "post_id": data["post_id"],
+                                        //   "post_title": data["title"],
+                                        //   "category": data["Category"],
+                                        //   "post_image": data["image"],
+                                        //   "post_user_id": data["user_id"],
+                                        //   "post_user_image":
+                                        //       data["user_image_url"],
+                                        //   'post_user_name': data['user_name'],
+                                        //   'date': data['date'],
+                                        //   'likes':
+                                        //       data['likes'].length.toString(),
+                                        //   "booking_id": bookingId
+                                        // });
+                                      },
+                                      child: customText('Bookings'))
+                                  : IconButton(
+                                      onPressed: () {
+                                        if (favoritesBox!
+                                            .containsKey(favorites.uid)) {
+                                          favoritesBox!.delete(favorites.uid);
+                                          Get.snackbar(
+                                            'Success',
+                                            'Post removed from Favorites SuccessFully',
+                                            backgroundColor:
+                                                AppColors.borderColor,
+                                          );
+                                        } else {
+                                          favoritesBox!
+                                              .put(favorites.uid, favorites);
+                                          Get.snackbar(
+                                            'Success',
+                                            'Post added to Favorites SuccessFully',
+                                            backgroundColor:
+                                                AppColors.borderColor,
+                                          );
+                                        }
+                                        // favoritesBox!.containsKey(favorites.uid)
+                                        //     ? favoritesBox!.delete(favorites.uid)
+                                        //     : favoritesBox!
+                                        //         .put(favorites.uid, favorites);
+                                        setState(() {});
+                                      },
+                                      icon: favoritesBox!
+                                              .containsKey(favorites.uid)
+                                          ? Icon(
+                                              Icons.favorite,
+                                              color: AppColors.kRedColor,
+                                            )
+                                          : Icon(
+                                              Icons.favorite_border,
+                                            ),
+                                    ),
                             ],
                           ),
                         ],
