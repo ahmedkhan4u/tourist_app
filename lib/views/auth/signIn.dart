@@ -35,7 +35,40 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     // TODO: implement initState
+
+    getUserLoginStatus();
+
     super.initState();
+  }
+
+  void getUserLoginStatus() async {
+        if (FirebaseAuth.instance.currentUser != null) {
+      try{
+
+        final res = await FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .get();
+
+                              if (res.exists && res.data()!.length > 0) {
+                                if (res.data()!["Role"] == "Vendor") {
+                                  Get.to(() =>
+                                      BottomNavigationScreen(data: res.data()));
+                                  print("Vendor");
+                                  setState(() {});
+                                } else {
+                                  Get.to(() => BottomNavigationForTourist(
+                                        data: res.data(),
+                                      ));
+                                  print("Tourist");
+                                  setState(() {});
+                                }
+                              }
+
+      } catch(ex) {
+        print(ex);
+      }
+    }
   }
 
   @override
