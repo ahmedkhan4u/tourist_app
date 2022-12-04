@@ -9,6 +9,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:share/share.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
+
+import 'package:tourist_app/views/services/chats.dart';
+import 'package:tourist_app/views/services/messages.dart';
 import 'package:tourist_app/views/services/bookingUsers.dart';
 import 'package:tourist_app/views/services/postDetails.dart';
 import 'package:tourist_app/views/services/remove.dart';
@@ -124,6 +127,18 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   IconButton(
                     onPressed: () {
+                      Get.to(() => Chats(data: widget.data));
+                      setState(() {
+
+                      });
+                    },
+                    icon: Icon(
+                      Icons.message_outlined,
+                    ),
+                    color: Colors.black,
+                  ),
+                  IconButton(
+                    onPressed: () {
                       isList = true;
                       setState(() {});
                     },
@@ -144,9 +159,8 @@ class _HomePageState extends State<HomePage> {
                           isList ? AppColors.kBlackColor : AppColors.kBlueColor,
                     ),
                   ),
-                  SizedBox(
-                    width: Get.width * 0.01,
-                  ),
+                    
+                
                 ],
               ),
             ),
@@ -405,6 +419,8 @@ class _HomePageState extends State<HomePage> {
                                               };
                                       }),
                                   customText(data['likes'].length.toString()),
+
+                                  
                                 ],
                               ),
                               IconButton(
