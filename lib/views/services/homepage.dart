@@ -9,8 +9,10 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:share/share.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
+
 import 'package:tourist_app/views/services/chats.dart';
 import 'package:tourist_app/views/services/messages.dart';
+import 'package:tourist_app/views/services/bookingUsers.dart';
 import 'package:tourist_app/views/services/postDetails.dart';
 import 'package:tourist_app/views/services/remove.dart';
 import '../../main.dart';
@@ -321,6 +323,8 @@ class _HomePageState extends State<HomePage> {
                                               .doc(bookingId)
                                               .set({
                                             "booker_name": widget.data["name"],
+                                            'booker_image':
+                                                widget.data['image'],
                                             "booker_id": FirebaseAuth
                                                 .instance.currentUser!.uid,
                                             "post_id": data["post_id"],
@@ -332,6 +336,8 @@ class _HomePageState extends State<HomePage> {
                                                 data["user_image_url"],
                                             'post_user_name': data['user_name'],
                                             'date': data['date'],
+                                            'Booking_date':
+                                                '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
                                             'likes':
                                                 data['likes'].length.toString(),
                                             "booking_id": bookingId
@@ -419,7 +425,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               IconButton(
                                 onPressed: () async {
-                                  _settingModalBottomSheet(context, data["post_id"]);
+                                  _settingModalBottomSheet(
+                                      context, data["post_id"]);
                                 },
                                 icon: Icon(
                                   Icons.comment_outlined,
@@ -427,57 +434,95 @@ class _HomePageState extends State<HomePage> {
                                   size: 20.0,
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  if (favoritesBox!
-                                      .containsKey(favorites.uid)) {
-                                    favoritesBox!.delete(favorites.uid);
-                                    Get.snackbar(
-                                      'Success',
-                                      'Post removed from Favorites SuccessFully',
-                                      backgroundColor: AppColors.borderColor,
-                                    );
-                                  } else {
-                                    favoritesBox!.put(favorites.uid, favorites);
-                                    Get.snackbar(
-                                      'Success',
-                                      'Post added to Favorites SuccessFully',
-                                      backgroundColor: AppColors.borderColor,
-                                    );
-                                  }
-                                  // favoritesBox!.containsKey(favorites.uid)
-                                  //     ? favoritesBox!.delete(favorites.uid)
-                                  //     : favoritesBox!
-                                  //         .put(favorites.uid, favorites);
-                                  setState(() {});
-                                },
-                                icon: favoritesBox!.containsKey(favorites.uid)
-                                    ? Icon(
-                                        Icons.favorite,
-                                        color: AppColors.kRedColor,
-                                      )
-                                    : Icon(
-                                        Icons.favorite_border,
-                                      ),
-                              ),
+                              widget.data["Role"] != null &&
+                                      widget.data["Role"] == "Vendor"
+                                  ? TextButton(
+                                      onPressed: () async {
+                                        Get.to(() => BookingUserScreen());
+                                        // if (data["bookings"].contains(
+                                        //     FirebaseAuth
+                                        //         .instance.currentUser!.uid)) {
+                                        //   Get.snackbar(
+                                        //       "Info", "Already booked");
+                                        //   return;
+                                        // }
+                                        // await FirebaseFirestore.instance
+                                        //     .collection("posts")
+                                        //     .doc(data['post_id'])
+                                        //     .update({
+                                        //   "bookings": FieldValue.arrayUnion([
+                                        //     FirebaseAuth
+                                        //         .instance.currentUser!.uid
+                                        //   ])
+                                        // });
 
-                              widget.data["Role"] == "Vendor" ? Container() : IconButton(icon: Icon(Icons.message), onPressed: () {
+                                        // final bookingId =
+                                        //     await FirebaseFirestore.instance
+                                        //         .collection("bookings")
+                                        //         .doc()
+                                        //         .id;
 
-                                var chatId = "";
-
-                                if (widget.data["user_id"].hashCode > data["user_id"].hashCode) {
-                                  chatId = "${widget.data["user_id"]}-${data["user_id"]}";
-                                } else {
-                                  chatId = "${data["user_id"]}-${widget.data["user_id"]}";
-                                  print("Here");
-                                }
-
-                            
-
-                                Get.to(() => Messages(data: {"chat_id": chatId, 
-                                "rec_id": data["user_id"],
-                                "rec_image":data["image"], "rec_name": data["name"]},));
-                              })
+                                        // await FirebaseFirestore.instance
+                                        //     .collection("bookings")
+                                        //     .doc(bookingId)
+                                        //     .set({
+                                        //   "booker_name": widget.data["name"],
+                                        //   'booker_image':
+                                        //       widget.data['image'],
+                                        //   "booker_id": FirebaseAuth
+                                        //       .instance.currentUser!.uid,
+                                        //   "post_id": data["post_id"],
+                                        //   "post_title": data["title"],
+                                        //   "category": data["Category"],
+                                        //   "post_image": data["image"],
+                                        //   "post_user_id": data["user_id"],
+                                        //   "post_user_image":
+                                        //       data["user_image_url"],
+                                        //   'post_user_name': data['user_name'],
+                                        //   'date': data['date'],
+                                        //   'likes':
+                                        //       data['likes'].length.toString(),
+                                        //   "booking_id": bookingId
+                                        // });
+                                      },
+                                      child: customText('Bookings'))
+                                  : IconButton(
+                                      onPressed: () {
+                                        if (favoritesBox!
+                                            .containsKey(favorites.uid)) {
+                                          favoritesBox!.delete(favorites.uid);
+                                          Get.snackbar(
+                                            'Success',
+                                            'Post removed from Favorites SuccessFully',
+                                            backgroundColor:
+                                                AppColors.borderColor,
+                                          );
+                                        } else {
+                                          favoritesBox!
+                                              .put(favorites.uid, favorites);
+                                          Get.snackbar(
+                                            'Success',
+                                            'Post added to Favorites SuccessFully',
+                                            backgroundColor:
+                                                AppColors.borderColor,
+                                          );
+                                        }
+                                        // favoritesBox!.containsKey(favorites.uid)
+                                        //     ? favoritesBox!.delete(favorites.uid)
+                                        //     : favoritesBox!
+                                        //         .put(favorites.uid, favorites);
+                                        setState(() {});
+                                      },
+                                      icon: favoritesBox!
+                                              .containsKey(favorites.uid)
+                                          ? Icon(
+                                              Icons.favorite,
+                                              color: AppColors.kRedColor,
+                                            )
+                                          : Icon(
+                                              Icons.favorite_border,
+                                            ),
+                                    ),
                             ],
                           ),
                         ],
@@ -527,14 +572,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
-void _settingModalBottomSheet(context, postId){
-  TextEditingController controller = TextEditingController();
+  void _settingModalBottomSheet(context, postId) {
+    TextEditingController controller = TextEditingController();
     showModalBottomSheet(
-      context: context,
-
-      isScrollControlled: true,
-      builder: (BuildContext bc){
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
           return Container(
             padding: EdgeInsets.all(16),
             height: Get.height * 0.8,
@@ -547,128 +590,129 @@ void _settingModalBottomSheet(context, postId){
                   children: [
                     Expanded(
                       child: TextFormField(
-                        controller: controller,
-                                      decoration: InputDecoration(
-                labelText: "Type here...",
-                fillColor: Colors.white,
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(
-                    color: Colors.blueGrey,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(
-                    color: Colors.blueGrey,
-                    width: 2.0,
-                  ),
-                ),
-)
-                                    ),
+                          controller: controller,
+                          decoration: InputDecoration(
+                            labelText: "Type here...",
+                            fillColor: Colors.white,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: Colors.blueGrey,
+                                width: 2.0,
+                              ),
+                            ),
+                          )),
                     ),
-                    
-                TextButton(onPressed: () async {
+                    TextButton(
+                        onPressed: () async {
+                          final data = {
+                            "user_id": widget.data["user_id"],
+                            "role": widget.data["Role"],
+                            "comment": controller.text,
+                            "name": widget.data["name"],
+                            "image": widget.data["image"],
+                            "timestamp": DateTime.now().millisecondsSinceEpoch,
+                          };
 
-                  final data = {
-                    "user_id": widget.data["user_id"],
-                    "role": widget.data["Role"],
-                    "comment": controller.text,
-                    "name": widget.data["name"],
-                    "image": widget.data["image"],   
-                    "timestamp": DateTime.now().millisecondsSinceEpoch,              
-                  };
+                          final docId = await FirebaseFirestore.instance
+                              .collection("comments")
+                              .doc()
+                              .id;
+                          data["comment_id"] = docId;
+                          await FirebaseFirestore.instance
+                              .collection("posts")
+                              .doc(postId)
+                              .collection("comments")
+                              .doc(docId)
+                              .set(data);
 
-                  final docId = await FirebaseFirestore.instance
-                  .collection("comments").doc().id;
-                  data["comment_id"] = docId;
-                  await FirebaseFirestore.instance.collection("posts")
-                  .doc(postId).collection("comments").doc(docId).set(data);
-                  
-
-                  controller.text = "";
-                  setState(() {
-
-                  
-                  });
-
-                }, child: Text("Post"))
+                          controller.text = "";
+                          setState(() {});
+                        },
+                        child: Text("Post"))
                   ],
                 ),
-
-                SizedBox(height: 16,),
-
-                Container(height: 1, color: Colors.black12,
-              
+                SizedBox(
+                  height: 16,
                 ),
-                                SizedBox(height: 16,),
-
                 Container(
-                  height: Get.height*0.65,
-                  width: Get.width * 1,
-
-                  child: FirestorePagination(
-                  
-                  //item builder type is compulsory.
-                  itemBuilder: (context, documentSnapshots, index) {
-                    final data = documentSnapshots.data() as Map?;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: ClipRRect(
-                          
-                                            borderRadius: BorderRadius.circular(100),
-                                        
-                            child: Image.network(
-                              data!["image"],
-                              fit: BoxFit.fill,
-                        
-                              
-                              )),
-                        ),
-                        SizedBox(width: 8,),
-                        Expanded(child: Text(data!["name"])),
-                        Text(DateTime.fromMillisecondsSinceEpoch(data["timestamp"])
-                        .toUtc().toIso8601String().substring(0, 10))
-                          ],
-                        ),
-
-                        SizedBox(height: 8,),
-                        Container(
-                          margin: EdgeInsets.only(left: 48),
-                          child: Text(data["comment"]),
-                        ),
-                        
-                        Container(height: 1, color: Colors.grey, margin: EdgeInsets.symmetric(vertical: 8),)
-                      ],
-                    );
-                  },
-                  limit: 5,
-                  // orderBy is compulsory to enable pagination
-                  query: FirebaseFirestore.instance.collection('posts')
-                  .doc(postId).collection("comments")
-                  .orderBy("timestamp", descending: true)
-                  .limit(5),
-                  //Change types accordingly
-                  viewType: ViewType.list,
-                  // to fetch real-time data
-                  isLive: true,
-                              ),
+                  height: 1,
+                  color: Colors.black12,
                 ),
-
-                
+                SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  height: Get.height * 0.65,
+                  width: Get.width * 1,
+                  child: FirestorePagination(
+                    //item builder type is compulsory.
+                    itemBuilder: (context, documentSnapshots, index) {
+                      final data = documentSnapshots.data() as Map?;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Image.network(
+                                      data!["image"],
+                                      fit: BoxFit.fill,
+                                    )),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(child: Text(data!["name"])),
+                              Text(DateTime.fromMillisecondsSinceEpoch(
+                                      data["timestamp"])
+                                  .toUtc()
+                                  .toIso8601String()
+                                  .substring(0, 10))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 48),
+                            child: Text(data["comment"]),
+                          ),
+                          Container(
+                            height: 1,
+                            color: Colors.grey,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                          )
+                        ],
+                      );
+                    },
+                    limit: 5,
+                    // orderBy is compulsory to enable pagination
+                    query: FirebaseFirestore.instance
+                        .collection('posts')
+                        .doc(postId)
+                        .collection("comments")
+                        .orderBy("timestamp", descending: true)
+                        .limit(5),
+                    //Change types accordingly
+                    viewType: ViewType.list,
+                    // to fetch real-time data
+                    isLive: true,
+                  ),
+                ),
               ],
             ),
-
-            
           );
-      }
-    );
-}
-
+        });
+  }
 }
