@@ -403,7 +403,9 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               IconButton(
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  _settingModalBottomSheet(context, data["post_id"]);
+                                },
                                 icon: Icon(
                                   Icons.comment_outlined,
                                   color: AppColors.kBlackColor,
@@ -491,4 +493,148 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
+void _settingModalBottomSheet(context, postId){
+  TextEditingController controller = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+
+      isScrollControlled: true,
+      builder: (BuildContext bc){
+          return Container(
+            padding: EdgeInsets.all(16),
+            height: Get.height * 0.8,
+            child: Wrap(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: controller,
+                                      decoration: InputDecoration(
+                labelText: "Type here...",
+                fillColor: Colors.white,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey,
+                    width: 2.0,
+                  ),
+                ),
+)
+                                    ),
+                    ),
+                    
+                TextButton(onPressed: () async {
+
+                  final data = {
+                    "user_id": widget.data["user_id"],
+                    "role": widget.data["Role"],
+                    "comment": controller.text,
+                    "name": widget.data["name"],
+                    "image": widget.data["image"],   
+                    "timestamp": DateTime.now().millisecondsSinceEpoch,              
+                  };
+
+                  final docId = await FirebaseFirestore.instance
+                  .collection("comments").doc().id;
+                  data["comment_id"] = docId;
+                  await FirebaseFirestore.instance.collection("posts")
+                  .doc(postId).collection("comments").doc(docId).set(data);
+                  
+
+                  controller.text = "";
+                  setState(() {
+                    
+                  });
+
+                }, child: Text("Post"))
+                  ],
+                ),
+
+                SizedBox(height: 16,),
+
+                Container(height: 1, color: Colors.black12,
+              
+                ),
+                                SizedBox(height: 16,),
+
+                Container(
+                  height: Get.height*0.65,
+                  width: Get.width * 1,
+
+                  child: FirestorePagination(
+                  
+                  //item builder type is compulsory.
+                  itemBuilder: (context, documentSnapshots, index) {
+                    final data = documentSnapshots.data() as Map?;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: ClipRRect(
+                          
+                                            borderRadius: BorderRadius.circular(100),
+                                        
+                            child: Image.network(
+                              data!["image"],
+                              fit: BoxFit.fill,
+                        
+                              
+                              )),
+                        ),
+                        SizedBox(width: 8,),
+                        Expanded(child: Text(data!["name"])),
+                        Text(DateTime.fromMillisecondsSinceEpoch(data["timestamp"])
+                        .toUtc().toIso8601String().substring(0, 10))
+                          ],
+                        ),
+
+                        SizedBox(height: 8,),
+                        Container(
+                          margin: EdgeInsets.only(left: 48),
+                          child: Text(data["comment"]),
+                        ),
+                        
+                        Container(height: 1, color: Colors.grey, margin: EdgeInsets.symmetric(vertical: 8),)
+                      ],
+                    );
+                  },
+                  limit: 5,
+                  // orderBy is compulsory to enable pagination
+                  query: FirebaseFirestore.instance.collection('posts')
+                  .doc(postId).collection("comments")
+                  .orderBy("timestamp", descending: true)
+                  .limit(5),
+                  //Change types accordingly
+                  viewType: ViewType.list,
+                  // to fetch real-time data
+                  isLive: true,
+                              ),
+                ),
+
+                
+              ],
+            ),
+
+            
+          );
+      }
+    );
+}
+
 }
