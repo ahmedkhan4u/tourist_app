@@ -233,7 +233,26 @@ class _BottomNavigationForTouristState
   
   @override
   Widget build(BuildContext context) {
-    Widget currentScreen = HomePage(data: widget.data,); //
+    
+
+    Widget getWidget() {
+
+      switch(currentTab) {
+        case 0:
+        return HomePage(data: widget.data,);
+        case 1:
+        return BookingScreen(data: widget.data,);
+        case 2:
+        return Favorites(data: widget.data,);
+        case 3:
+        return MyPosts(data: widget.data,);
+
+        default: 
+        return HomePage(data: widget.data,);
+      }
+    }
+
+    Widget currentScreen = getWidget(); //
   
 print(widget.data.toString());
     return SafeArea(
