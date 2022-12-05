@@ -42,30 +42,27 @@ class _SignInState extends State<SignIn> {
   }
 
   void getUserLoginStatus() async {
-        if (FirebaseAuth.instance.currentUser != null) {
-      try{
-
+    if (FirebaseAuth.instance.currentUser != null) {
+      try {
         final res = await FirebaseFirestore.instance
-                                  .collection("users")
-                                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .get();
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
 
-                              if (res.exists && res.data()!.length > 0) {
-                                if (res.data()!["Role"] == "Vendor") {
-                                  Get.to(() =>
-                                      BottomNavigationScreen(data: res.data()));
-                                  print("Vendor");
-                                  setState(() {});
-                                } else {
-                                  Get.to(() => BottomNavigationForTourist(
-                                        data: res.data(),
-                                      ));
-                                  print("Tourist");
-                                  setState(() {});
-                                }
-                              }
-
-      } catch(ex) {
+        if (res.exists && res.data()!.length > 0) {
+          if (res.data()!["Role"] == "Vendor") {
+            Get.to(() => BottomNavigationScreen(data: res.data()));
+            print("Vendor");
+            setState(() {});
+          } else {
+            Get.to(() => BottomNavigationForTourist(
+                  data: res.data(),
+                ));
+            print("Tourist");
+            setState(() {});
+          }
+        }
+      } catch (ex) {
         print(ex);
       }
     }
@@ -165,6 +162,9 @@ class _SignInState extends State<SignIn> {
                               }
                               Get.snackbar(
                                   'SignIn', 'User Singed In Successfully');
+                              setState(() {
+                                isUserLogin = false;
+                              });
                             } on FirebaseAuthException catch (e) {
                               Get.snackbar(
                                 'Error',

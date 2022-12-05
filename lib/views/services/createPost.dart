@@ -35,6 +35,7 @@ class _CreatePostState extends State<CreatePost> {
   File? imageFile;
   CroppedFile? _croppedFile;
   TextEditingController titleController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   String? imageUrl;
   Map? likes;
   bool isPosted = false;
@@ -230,6 +231,11 @@ class _CreatePostState extends State<CreatePost> {
                   controller: titleController,
                 ),
                 SizedBox(height: Get.height * 0.05),
+                customTextField(
+                  text: 'Enter Price',
+                  controller: priceController,
+                ),
+                SizedBox(height: Get.height * 0.05),
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   child: DropdownButton<String>(
@@ -274,15 +280,16 @@ class _CreatePostState extends State<CreatePost> {
                                       .getDownloadURL();
                               print(imageUrl);
                               final docId = await FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc()
-                                    .id;
+                                  .collection('posts')
+                                  .doc()
+                                  .id;
 
                               Get.snackbar('storage sms',
                                   'Upload image successfully to firebase storage');
                               db.collection('posts').doc(docId).set({
                                 'image': imageUrl,
                                 'title': titleController.text,
+                                'price': priceController.text,
                                 'user_id':
                                     FirebaseAuth.instance.currentUser!.uid,
                                 'post_id': docId,

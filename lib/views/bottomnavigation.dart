@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tourist_app/views/services/bookingUsers.dart';
 import 'package:tourist_app/views/services/bookings.dart';
 import 'package:tourist_app/views/services/categories.dart';
 
@@ -45,9 +46,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             data: widget.data,
           );
         case 2:
-          return Favorites(
-            data: widget.data,
-          );
+          return BookingUserScreen();
         case 3:
           return MyPosts(
             data: widget.data,
@@ -153,7 +152,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                       onPressed: () {
                         setState(() {
                           currentScreen =
-                              Favorites(); // if user taps on this dashboard tab will be active
+                              BookingUserScreen(); // if user taps on this dashboard tab will be active
                           currentTab = 2;
                         });
                       },
@@ -161,11 +160,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(
-                            Icons.favorite_border,
+                            Icons.bookmark_add_outlined,
                             color: currentTab == 2 ? Colors.blue : Colors.grey,
                           ),
                           Text(
-                            'Favorites',
+                            'Booking',
                             style: TextStyle(
                               color:
                                   currentTab == 2 ? Colors.blue : Colors.grey,
@@ -235,7 +234,6 @@ class _BottomNavigationForTouristState
   // O
   @override
   Widget build(BuildContext context) {
-  
     Widget getWidget() {
       switch (currentTab) {
         case 0:

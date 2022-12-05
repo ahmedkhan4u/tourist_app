@@ -38,7 +38,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: Get.height * 0.15,
+                height: Get.height * 0.3,
                 width: Get.width,
                 padding: EdgeInsets.symmetric(
                   horizontal: 10.0,
