@@ -43,6 +43,7 @@
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
+      
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
@@ -54,5 +55,51 @@
       });
     });
   </script>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script type="module">
+
+  // Import the functions you need from the SDKs you need
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+  // Your web app's Firebase configuration
+
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyBHvYgLuhAWfx0L0PoxNaN_H4qg5a6rdaI",
+
+    authDomain: "touristapp-41ed9.firebaseapp.com",
+
+    projectId: "touristapp-41ed9",
+
+    storageBucket: "touristapp-41ed9.appspot.com",
+
+    messagingSenderId: "844070321275",
+
+    appId: "1:844070321275:web:5d5d308a63145e4adc36de",
+
+    measurementId: "G-LSK6XPPWZL"
+
+  };
+
+
+  // Initialize Firebase
+
+  const app = initializeApp(firebaseConfig);
+
+  const analytics = getAnalytics(app);
+
+</script>
+<!-- <script src="main.dart.js" type="application/javascript"></script> -->
 </body>
 </html>
