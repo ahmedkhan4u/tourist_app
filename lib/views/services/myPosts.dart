@@ -55,7 +55,9 @@ class _MyPostsState extends State<MyPosts> {
   void logoutUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    FirebaseAuth.instance.signOut();
     Get.to(() => SplashScreen());
+    
   }
 
   @override

@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:share/share.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
+import 'package:tourist_app/views/services/chats.dart';
+import 'package:tourist_app/views/services/messages.dart';
 import 'package:tourist_app/views/services/postDetails.dart';
 import 'package:tourist_app/views/services/remove.dart';
 import '../../main.dart';
@@ -123,6 +125,18 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   IconButton(
                     onPressed: () {
+                      Get.to(() => Chats(data: widget.data));
+                      setState(() {
+
+                      });
+                    },
+                    icon: Icon(
+                      Icons.message_outlined,
+                    ),
+                    color: Colors.black,
+                  ),
+                  IconButton(
+                    onPressed: () {
                       isList = true;
                       setState(() {});
                     },
@@ -143,9 +157,8 @@ class _HomePageState extends State<HomePage> {
                           isList ? AppColors.kBlackColor : AppColors.kBlueColor,
                     ),
                   ),
-                  SizedBox(
-                    width: Get.width * 0.01,
-                  ),
+                    
+                
                 ],
               ),
             ),
@@ -400,6 +413,8 @@ class _HomePageState extends State<HomePage> {
                                               };
                                       }),
                                   customText(data['likes'].length.toString()),
+
+                                  
                                 ],
                               ),
                               IconButton(
@@ -445,6 +460,24 @@ class _HomePageState extends State<HomePage> {
                                         Icons.favorite_border,
                                       ),
                               ),
+
+                              widget.data["Role"] == "Vendor" ? Container() : IconButton(icon: Icon(Icons.message), onPressed: () {
+
+                                var chatId = "";
+
+                                if (widget.data["user_id"].hashCode > data["user_id"].hashCode) {
+                                  chatId = "${widget.data["user_id"]}-${data["user_id"]}";
+                                } else {
+                                  chatId = "${data["user_id"]}-${widget.data["user_id"]}";
+                                  print("Here");
+                                }
+
+                            
+
+                                Get.to(() => Messages(data: {"chat_id": chatId, 
+                                "rec_id": data["user_id"],
+                                "rec_image":data["image"], "rec_name": data["name"]},));
+                              })
                             ],
                           ),
                         ],
@@ -555,7 +588,8 @@ void _settingModalBottomSheet(context, postId){
 
                   controller.text = "";
                   setState(() {
-                    
+
+                  
                   });
 
                 }, child: Text("Post"))
