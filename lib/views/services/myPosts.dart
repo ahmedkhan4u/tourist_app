@@ -54,11 +54,13 @@ class _MyPostsState extends State<MyPosts> {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   void logoutUser() async {
+
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // prefs.clear();
     // Get.to(() => SignIn());
     FirebaseAuth.instance.signOut();
     Get.to(() => SignIn());
+
   }
 
   @override

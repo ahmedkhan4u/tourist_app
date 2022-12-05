@@ -9,6 +9,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:share/share.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
+
+import 'package:tourist_app/views/services/chats.dart';
+import 'package:tourist_app/views/services/messages.dart';
 import 'package:tourist_app/views/services/bookingUsers.dart';
 import 'package:tourist_app/views/services/postDetails.dart';
 import 'package:tourist_app/views/services/remove.dart';
@@ -152,6 +155,18 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   IconButton(
                     onPressed: () {
+                      Get.to(() => Chats(data: widget.data));
+                      setState(() {
+
+                      });
+                    },
+                    icon: Icon(
+                      Icons.message_outlined,
+                    ),
+                    color: Colors.black,
+                  ),
+                  IconButton(
+                    onPressed: () {
                       isList = true;
                       setState(() {});
                     },
@@ -172,9 +187,8 @@ class _HomePageState extends State<HomePage> {
                           isList ? AppColors.kBlackColor : AppColors.kBlueColor,
                     ),
                   ),
-                  SizedBox(
-                    width: Get.width * 0.01,
-                  ),
+                    
+                
                 ],
               ),
             ],
@@ -465,185 +479,141 @@ class _HomePageState extends State<HomePage> {
                                                                     .doc()
                                                                     .id;
 
-                                                            await FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    "bookings")
-                                                                .doc(bookingId)
-                                                                .set({
-                                                              "booker_name":
-                                                                  widget.data[
-                                                                      "name"],
-                                                              'booker_image':
-                                                                  widget.data[
-                                                                      'image'],
-                                                              "booker_id":
-                                                                  FirebaseAuth
-                                                                      .instance
-                                                                      .currentUser!
-                                                                      .uid,
-                                                              ' Price':
-                                                                  data['price'],
-                                                              'Time':
-                                                                  timeController
-                                                                      .text,
-                                                              'Payment Method':
-                                                                  payment,
-                                                              "post_id": data[
-                                                                  "post_id"],
-                                                              "post_title":
-                                                                  data["title"],
-                                                              "category": data[
-                                                                  "Category"],
-                                                              "post_image":
-                                                                  data["image"],
-                                                              "post_user_id":
-                                                                  data[
-                                                                      "user_id"],
-                                                              "post_user_image":
-                                                                  data[
-                                                                      "user_image_url"],
-                                                              'post_user_name':
-                                                                  data[
-                                                                      'user_name'],
-                                                              'date':
-                                                                  data['date'],
-                                                              'Booking_date':
-                                                                  '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
-                                                              'likes': data[
-                                                                      'likes']
-                                                                  .length
-                                                                  .toString(),
-                                                              "booking_id":
-                                                                  bookingId,
-                                                            });
-                                                            Navigator.pop(
-                                                                context);
-                                                          })
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: customText('Book Now')),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: Get.width,
-                                  height: Get.height * 0.3,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      10.0,
-                                    ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(data['image']),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                            icon: (data['likes'].contains(
-                                                    FirebaseAuth.instance
-                                                        .currentUser!.uid))
-                                                ? Icon(
-                                                    Icons.thumb_up,
-                                                    color: AppColors.kBlueColor,
-                                                  )
-                                                : Icon(
-                                                    Icons.thumb_up_outlined,
-                                                  ),
-                                            onPressed: () async {
-                                              (data['likes'].contains(
-                                                      FirebaseAuth.instance
-                                                          .currentUser!.uid))
-                                                  ? {
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection('posts')
-                                                          .doc(documentSnapshots
-                                                              .id)
-                                                          .update(
-                                                        {
-                                                          'likes': FieldValue
-                                                              .arrayRemove(
-                                                            [
-                                                              FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser!
-                                                                  .uid
-                                                            ],
-                                                          ),
-                                                        },
-                                                      ),
-                                                    }
-                                                  : {
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection('posts')
-                                                          .doc(documentSnapshots
-                                                              .id)
-                                                          .update(
-                                                        {
-                                                          'likes': FieldValue
-                                                              .arrayUnion(
-                                                            [
-                                                              FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser!
-                                                                  .uid
-                                                            ],
-                                                          ),
-                                                        },
-                                                      ),
-                                                    };
-                                            }),
-                                        customText(
-                                            data['likes'].length.toString()),
-                                      ],
-                                    ),
-                                    IconButton(
+                                          await FirebaseFirestore.instance
+                                              .collection("bookings")
+                                              .doc(bookingId)
+                                              .set({
+                                            "booker_name": widget.data["name"],
+                                            'booker_image':
+                                                widget.data['image'],
+                                            "booker_id": FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            "post_id": data["post_id"],
+                                            "post_title": data["title"],
+                                            "category": data["Category"],
+                                            "post_image": data["image"],
+                                            "post_user_id": data["user_id"],
+                                            "post_user_image":
+                                                data["user_image_url"],
+                                            'post_user_name': data['user_name'],
+                                            'date': data['date'],
+                                            'Booking_date':
+                                                '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+                                            'likes':
+                                                data['likes'].length.toString(),
+                                            "booking_id": bookingId
+                                          });
+                                        },
+                                        child: (data["bookings"].contains(
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid))
+                                            ? customText('Booked')
+                                            : customText('Book')),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: Get.width,
+                            height: Get.height * 0.3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                10.0,
+                              ),
+                              image: DecorationImage(
+                                image: NetworkImage(data['image']),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: Get.height * 0.02,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                      icon: (data['likes'].contains(FirebaseAuth
+                                              .instance.currentUser!.uid))
+                                          ? Icon(
+                                              Icons.thumb_up,
+                                              color: AppColors.kBlueColor,
+                                            )
+                                          : Icon(
+                                              Icons.thumb_up_outlined,
+                                            ),
                                       onPressed: () async {
-                                        _settingModalBottomSheet(
-                                            context, data["post_id"]);
-                                      },
-                                      icon: Icon(
-                                        Icons.comment_outlined,
-                                        color: AppColors.kBlackColor,
-                                        size: 20.0,
-                                      ),
-                                    ),
-                                    widget.data["Role"] != null &&
-                                            widget.data["Role"] == "Vendor"
-                                        ? TextButton(
-                                            onPressed: () async {
-                                              Get.to(() => BookingUserScreen());
-                                              // if (data["bookings"].contains(
-                                              //     FirebaseAuth
-                                              //         .instance.currentUser!.uid)) {
-                                              //   Get.snackbar(
-                                              //       "Info", "Already booked");
-                                              //   return;
-                                              // }
-                                              // await FirebaseFirestore.instance
-                                              //     .collection("posts")
-                                              //     .doc(data['post_id'])
-                                              //     .update({
-                                              //   "bookings": FieldValue.arrayUnion([
-                                              //     FirebaseAuth
-                                              //         .instance.currentUser!.uid
-                                              //   ])
-                                              // });
+                                        (data['likes'].contains(FirebaseAuth
+                                                .instance.currentUser!.uid))
+                                            ? {
+                                                await FirebaseFirestore.instance
+                                                    .collection('posts')
+                                                    .doc(documentSnapshots.id)
+                                                    .update(
+                                                  {
+                                                    'likes':
+                                                        FieldValue.arrayRemove(
+                                                      [
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                      ],
+                                                    ),
+                                                  },
+                                                ),
+                                              }
+                                            : {
+                                                await FirebaseFirestore.instance
+                                                    .collection('posts')
+                                                    .doc(documentSnapshots.id)
+                                                    .update(
+                                                  {
+                                                    'likes':
+                                                        FieldValue.arrayUnion(
+                                                      [
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                      ],
+                                                    ),
+                                                  },
+                                                ),
+                                              };
+                                      }),
+                                  customText(data['likes'].length.toString()),
+                                ],
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  _settingModalBottomSheet(
+                                      context, data["post_id"]);
+                                },
+                                icon: Icon(
+                                  Icons.comment_outlined,
+                                  color: AppColors.kBlackColor,
+                                  size: 20.0,
+                                ),
+                              ),
+                              widget.data["Role"] != null &&
+                                      widget.data["Role"] == "Vendor"
+                                  ? TextButton(
+                                      onPressed: () async {
+                                        Get.to(() => BookingUserScreen());
+                                        // if (data["bookings"].contains(
+                                        //     FirebaseAuth
+                                        //         .instance.currentUser!.uid)) {
+                                        //   Get.snackbar(
+                                        //       "Info", "Already booked");
+                                        //   return;
+                                        // }
+                                        // await FirebaseFirestore.instance
+                                        //     .collection("posts")
+                                        //     .doc(data['post_id'])
+                                        //     .update({
+                                        //   "bookings": FieldValue.arrayUnion([
+                                        //     FirebaseAuth
+                                        //         .instance.currentUser!.uid
+                                        //   ])
+                                        // });
 
                                               // final bookingId =
                                               //     await FirebaseFirestore.instance
