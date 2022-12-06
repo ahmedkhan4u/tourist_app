@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tourist_app/views/services/messages.dart';
@@ -78,7 +79,8 @@ class _ChatsState extends State<Chats> {
                 },
                 limit: 5,
                 // orderBy is compulsory to enable pagination
-                query: FirebaseFirestore.instance.collection('users')
+                query: kIsWeb ? FirebaseFirestore.instance.collection('users')
+                .limit(5) : FirebaseFirestore.instance.collection('users')
                 .where("user_id",  isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).limit(5),
                 //Change types accordingly
                 viewType: ViewType.list,
